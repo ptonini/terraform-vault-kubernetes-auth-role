@@ -1,4 +1,5 @@
 resource "vault_policy" "this" {
+  count = length(var.policy_definitions) > 0 ? 1 : 0
   name   = replace("${try(var.backend.path, var.backend)}_${var.name}", "/", "_")
   policy = join("\n\n", var.policy_definitions)
 }
@@ -11,5 +12,5 @@ resource "vault_kubernetes_auth_backend_role" "this" {
   bound_service_account_namespaces = var.bound_service_account_namespaces
   token_ttl                        = var.token_ttl
   token_max_ttl                    = var.token_max_ttl
-  token_policies                   = [vault_policy.this.name]
+  token_policies                   = concat(vault_policy.this[*].name, var.policies)
 }
