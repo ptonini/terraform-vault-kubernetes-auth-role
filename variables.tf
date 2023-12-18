@@ -4,6 +4,7 @@ variable "name" {}
 
 variable "audience" {
   default = "vault"
+  nullable = false
 }
 
 variable "token_ttl" {
